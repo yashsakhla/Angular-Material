@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Add Task</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Task ID</mat-label>
+    <input matInput [(ngModel)]="data.newTask.taskId">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Task Description</mat-label>
+    <input matInput [(ngModel)]="data.newTask.taskDesc">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Task Status</mat-label>
+    <mat-select [(ngModel)]="data.newTask.taskStatus">
+      <mat-option value="ongoing">Ongoing</mat-option>
+      <mat-option value="pending">Pending</mat-option>
+      <mat-option value="completed">Completed</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close(data.newTask)">Add</button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+</mat-dialog-actions>

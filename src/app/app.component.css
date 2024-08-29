@@ -1,104 +1,171 @@
-.main-container {
-    display: flex;
-    height: 100vh;
-    background-color: #f0f4f8;
+/* Layout Styles */
+.sidenav-container {
+    height: 100%;
   }
   
-  .left-section {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .animated-heading {
-    font-size: 2.5rem;
-    font-family: 'Roboto', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between "Welcome to" and typing text */
-    font-weight: 400;
-  }
-  
-  .typing-container {
-    display: inline-flex;
-    align-items: baseline;
-  }
-  
-  .blinking-cursor {
-    animation: blink 1s infinite;
-    font-weight: bold;
-  }
-  
-  @keyframes blink {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  .right-section {
-    flex: 0 0 400px; /* Adjust as needed for desired card width */
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+  .sidenav {
+    width: 250px;
+    background: #ffffff;
+    border-right: 1px solid #ddd;
     padding: 20px;
   }
   
-  .login-card {
-    width: 30rem;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    bottom: 5rem;
+  .admin-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
   }
   
-  .card-header {
-    text-align: center;
-    justify-content: center;
+  .profile-icon {
+    font-size: 48px;
+    margin-right: 15px;
+    color: #1976d2;
   }
   
-  .title {
-    font-size: 1.5rem;
-    font-weight: 500;
+  .admin-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 15px;
   }
   
-  .subtitle {
-    font-size: 1rem;
+  .admin-details h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .admin-details p {
+    margin: 0;
     color: #666;
   }
   
-  .full-width {
-    width: 100%;
-    margin-bottom: 16px;
-  }
-  
-  .login-button {
-    width: 100%;
-    height: 48px; /* Adjust the height as needed */
-    font-size: 1rem;
-    background-color: #1e88e5; /* Appealing blue color */
+  .mat-toolbar {
+    background: #1976d2;
     color: white;
-    border-radius: 6px; /* Slightly curved corners */
-    border: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, transform 0.3s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
-  .login-button:hover {
-    background-color: #1565c0; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight lift on hover for a subtle effect */
-    color: #fff;
+  .toolbar-title {
+    font-size: 1.2rem;
   }
   
-  .login-button:active {
-    background-color: #0d47a1; /* Even darker blue when clicked */
-    transform: translateY(0); 
-    color: #fff;/* Reset lift when active */
+  .mat-icon-button {
+    color: white;
   }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  /* Table Styles */
+  .mat-card {
+    margin-bottom: 10px;
+  }
+  
+  mat-expansion-panel {
+    margin-bottom: 10px;
+  }
+  
+  .mat-card-content {
+    padding: 16px;
+  }
+  
+  .colorful-table th, .colorful-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .colorful-table th {
+    background: #f5f5f5;
+    color: #333;
+  }
+  
+  .colorful-table td {
+    background: #ffffff;
+  }
+  
+  .nested-table th, .nested-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .status-icon-ongoing {
+    color: #ff9800;
+    animation: pulse 1.5s infinite;
+  }
+  
+  .status-icon-pending {
+    color: #ff5722;
+  }
+  
+  .status-icon-completed {
+    color: #4caf50;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .sidenav-container {
+    height: 100%;
+  }
+  
+  .sidenav {
+    width: 250px;
+  }
+  
+  .admin-info {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+  }
+  
+  .profile-icon {
+    font-size: 48px;
+    margin-right: 16px;
+  }
+  
+  .admin-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+  
+  .admin-details h3 {
+    margin: 0;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  .colorful-table {
+    background-color: #f0f0f0;
+  }
+  
+  .nested-table {
+    margin-top: 16px;
+  }
+  
+  .toolbar-title {
+    flex: 1;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
   

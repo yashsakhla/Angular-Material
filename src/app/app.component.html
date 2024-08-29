@@ -1,58 +1,193 @@
-<div class="main-container">
-  <!-- Left Section with Heading and Animation -->
-  <div class="left-section">
-    <h1 class="animated-heading">
-      Welcome to <span #typeingElement id="typing-text"></span>
-      <span class="blinking-cursor">|</span>
-    </h1>
-  </div>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" [opened]="isSidenavOpened" class="sidenav">
+    <div class="admin-info">
+      <mat-icon class="profile-icon">account_circle</mat-icon>
+      <img src="assets/admin-profile.jpg" alt="Admin" class="admin-image">
+      <div class="admin-details">
+        <h3>Admin Name</h3>
+        <p>adminexample.com</p>
+      </div>
+    </div>
+    <mat-nav-list>
+      <mat-list-item>Dashboard</mat-list-item>
+      <mat-list-item>Tasks</mat-list-item>
+      <mat-list-item>Reports</mat-list-item>
+      <mat-list-item>Settings</mat-list-item>
+    </mat-nav-list>
+    <button mat-button (click)="toggleSidenav()">Toggle Sidenav</button>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <span class="toolbar-title">Employee Task List</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
 
-  <!-- Right Section with Login Card -->
-  <div class="right-section">
-    <mat-card class="login-card">
-      <mat-card-header class="card-header">
-        <mat-card-title class="title">Admin Login</mat-card-title>
-        <mat-card-subtitle class="subtitle">
-          Please enter your credentials to continue
-        </mat-card-subtitle>
-      </mat-card-header>
+    <div class="content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Employee Task List</mat-card-title>
+          <button mat-raised-button color="primary" (click)="openAddEmployeeDialog()">Add Employee</button>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 colorful-table">
+            <!-- Employee ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> Employee ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
 
-      <mat-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" required />
-            <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-              Email is required
-            </mat-error>
-            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-              Invalid email format
-            </mat-error>
-          </mat-form-field>
+            <!-- Employee Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Password</mat-label>
-            <input
-              matInput
-              type="password"
-              formControlName="password"
-              required
-            />
-            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-              Password is required
-            </mat-error>
-          </mat-form-field>
+            <!-- Tasks Column -->
+            <ng-container matColumnDef="tasks">
+              <th mat-header-cell *matHeaderCellDef> Tasks </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Click to expand
+                    </mat-panel-title>
+                    <mat-icon (click)="openAddTaskDialog(element)">add</mat-icon>
+                  </mat-expansion-panel-header>
+                  <table mat-table [dataSource]="element.tasks" class="nested-table colorful-table">
+                    <!-- Task ID Column -->
+                    <ng-container matColumnDef="taskId">
+                      <th mat-header-cell *matHeaderCellDef> Task ID </th>
+                      <td mat-cell *matCellDef="let task"> {{task.taskId}} </td>
+                    </ng-container>
 
-          <button
-            mat-raised-button
-            color="primary"
-            class="login-button"
-            type="submit"
-          >
-            Login
-          </button>
-        </form>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</div>
+                    <!-- Task Description Column -->
+                    <ng-container matColumnDef="taskDesc">
+                      <th mat-header-cell *matHeaderCellDef> Task Description </th>
+                      <td mat-cell *matCellDef="let task"> {{task.taskDesc}} </td>
+                    </ng-container>
+
+                    <!-- Task Status Column -->
+                    <ng-container matColumnDef="taskStatus">
+                      <th mat-header-cell *matHeaderCellDef> Status </th>
+                      <td mat-cell *matCellDef="let task">
+                        <mat-icon [ngClass]="getStatusIconClass(task.taskStatus)">
+                          <ng-container *ngIf="task.taskStatus === 'ongoing'">loop</ng-container>
+                          <ng-container *ngIf="task.taskStatus === 'pending'">hourglass_empty</ng-container>
+                          <ng-container *ngIf="task.taskStatus === 'completed'">check_circle</ng-container>
+                        </mat-icon>
+                        {{task.taskStatus | titlecase}}
+                        <button mat-icon-button (click)="openEditTaskDialog(task)"><mat-icon>edit</mat-icon></button>
+                        <button mat-icon-button (click)="removeTask(task)"><mat-icon>delete</mat-icon></button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="nestedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: nestedColumns;"></tr>
+                  </table>
+                </mat-expansion-panel>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Add Employee Dialog -->
+<ng-template #addEmployeeDialog>
+  <h2 mat-dialog-title>Add Employee</h2>
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Employee ID</mat-label>
+      <input matInput [(ngModel)]="newEmployee.id">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Employee Name</mat-label>
+      <input matInput [(ngModel)]="newEmployee.name">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="addEmployee()">Add</button>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!-- Edit Employee Dialog -->
+<ng-template #editEmployeeDialog let-data="data">
+  <h2 mat-dialog-title>Edit Employee</h2>
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Employee ID</mat-label>
+      <input matInput [(ngModel)]="selectedEmployee.id" [value]="data.id" disabled>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Employee Name</mat-label>
+      <input matInput [(ngModel)]="selectedEmployee.name">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="editEmployee()">Save</button>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!-- Add Task Dialog -->
+<ng-template #addTaskDialog let-data="data">
+  <h2 mat-dialog-title>Add Task</h2>
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Task ID</mat-label>
+      <input matInput [(ngModel)]="newTask.taskId">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Task Description</mat-label>
+      <input matInput [(ngModel)]="newTask.taskDesc">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Task Status</mat-label>
+      <mat-select [(ngModel)]="newTask.taskStatus">
+        <mat-option value="ongoing">Ongoing</mat-option>
+        <mat-option value="pending">Pending</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="addTask()">Add</button>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!-- Edit Task Dialog -->
+<ng-template #editTaskDialog let-data="data">
+  <h2 mat-dialog-title>Edit Task</h2>
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Task ID</mat-label>
+      <input matInput [(ngModel)]="selectedTask.taskId" [value]="data.taskId" disabled>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Task Description</mat-label>
+      <input matInput [(ngModel)]="selectedTask.taskDesc">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Task Status</mat-label>
+      <mat-select [(ngModel)]="selectedTask.taskStatus">
+        <mat-option value="ongoing">Ongoing</mat-option>
+        <mat-option value="pending">Pending</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="editTask()">Save</button>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

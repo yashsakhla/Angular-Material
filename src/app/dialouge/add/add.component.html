@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Add Employee</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Employee ID</mat-label>
+    <input matInput [(ngModel)]="data.newEmployee.id">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Employee Name</mat-label>
+    <input matInput [(ngModel)]="data.newEmployee.name">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close(data.newEmployee)">Add</button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+</mat-dialog-actions>
